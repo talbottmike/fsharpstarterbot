@@ -1,17 +1,19 @@
 source https://api.nuget.org/v3/index.json
 
-nuget Autofac 3.5.2 framework: >= net461
-nuget Chronic.Signed 0.3.2 framework: >= net461
-nuget FAKE 4.28.0 framework: >= net461
-nuget FSharp.Compiler.Service 3.0.0 framework: >= net461
-nuget FSharp.Core 4.0.0.1 framework: >= net461
-nuget FSharp.Data 2.3.0 framework: >= net461
-nuget FsPickler 2.3.0 framework: >= net461
-nuget Microsoft.AspNet.WebApi.Client 5.2.3 framework: >= net452
-nuget Microsoft.AspNet.WebApi.Core 5.2.3 framework: >= net452
-nuget Microsoft.Bot.Builder 1.2.3 framework: >= net461
-nuget Microsoft.Bot.Connector 1.1.0.0 framework: >= net452
-nuget Microsoft.Rest.ClientRuntime 1.8.2 framework: >= net452
-nuget Microsoft.WindowsAzure.ConfigurationManager 3.2.1 framework: >= net461
-nuget Newtonsoft.Json 8.0.3 framework: >= net461
-nuget Suave 1.1.2 framework: >= net461
+nuget Autofac 3.5.2 framework: >= net46
+nuget Chronic.Signed 0.3.2 framework: >= net46
+nuget FAKE framework: >= net46
+nuget FSharp.Compiler.Service framework: >= net46
+nuget FSharp.Core framework: >= net46
+nuget FSharp.Data framework: >= net46
+nuget FsPickler framework: >= net46
+nuget Microsoft.AspNet.WebApi.Client 5.2.3 framework: >= net46
+nuget Microsoft.AspNet.WebApi.Core 5.2.3 framework: >= net46
+nuget Microsoft.Bot.Builder 3.5.0 framework: >= net46
+nuget Microsoft.IdentityModel.Protocol.Extensions 1.0.2.206221351 framework: >= net46
+nuget Microsoft.Rest.ClientRuntime 2.3.2 framework: >= net46
+nuget Microsoft.WindowsAzure.ConfigurationManager 3.2.1 framework: >= net46
+nuget Newtonsoft.Json 8.0.3 framework: >= net46
+nuget System.IdentityModel.Tokens.Jwt 4.0.2.206221351 framework: >= net46
+nuget Suave 1.1.3 framework: >= net46
+nuget System.Net.Http 4.3.0 framework: >= net46

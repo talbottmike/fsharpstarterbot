@@ -19,7 +19,7 @@ open Microsoft.FSharp.Compiler.Interactive.Shell
 // The following uses FileSystemWatcher to look for changes in 'app.fsx'. When
 // the file changes, we run `#load "app.fsx"` using the F# Interactive service
 // and then get the `App.app` value (top-level value defined using `let app = ...`).
-// The loaded WebPart is then hosted at localhost:8083.
+// The loaded WebPart is then hosted at localhost:3980.
 // --------------------------------------------------------------------------------------
 
 let sbOut = new Text.StringBuilder()
@@ -59,7 +59,7 @@ let serverConfig =
   { defaultConfig with
       homeFolder = Some __SOURCE_DIRECTORY__
       logger = Logging.Loggers.saneDefaultsFor Logging.LogLevel.Debug
-      bindings = [ HttpBinding.mkSimple HTTP  "127.0.0.1" 8083] }
+      bindings = [ HttpBinding.mkSimple HTTP  "127.0.0.1" 3980] }
 
 let reloadAppServer () =
   reloadScript() |> Option.iter (fun app -> 
@@ -74,7 +74,7 @@ Target "run" (fun _ ->
   reloadAppServer()
   Async.Start(server)
   // Open web browser with the loaded file
-  System.Diagnostics.Process.Start("http://localhost:8083") |> ignore
+  System.Diagnostics.Process.Start("http://localhost:3980") |> ignore
   
   // Watch for changes & reload when app.fsx changes
   use watcher = !! (__SOURCE_DIRECTORY__ @@ "*.*") |> WatchChanges (fun _ -> reloadAppServer())

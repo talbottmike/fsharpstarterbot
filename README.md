@@ -28,9 +28,9 @@ The FSharp code has been tested on both Windows 10 using the [BotEmulator](https
 
 ## Configuring the AppId and AppSecret
 
-* Set BOTAPPID and BOTAPPSECRET environment variables for the application id and application secret
-* In Windows you use the SET command such as SET BOTAPPID=MyID or there is the [SETX](http://ss64.com/nt/setx.html) command in Windows 7 and above
-* In OSX you use the EXPORT command such as EXPORT BOTAPPID="MyID" which you will want in your profile if you want it more permanent
+* Set MicrosoftAppId and MicrosoftAppPassword environment variables for the application id and application secret
+* In Windows you use the SET command such as SET MicrosoftAppId=MyID or there is the [SETX](http://ss64.com/nt/setx.html) command in Windows 7 and above
+* In OSX you use the EXPORT command such as EXPORT MicrosoftAppId="MyID" which you will want in your profile if you want it more permanent
 * In Azure you set environment variables under Settings -> Application Settings -> App settings
 * In Heroku you set [config vars](https://devcenter.heroku.com/articles/config-vars)
 

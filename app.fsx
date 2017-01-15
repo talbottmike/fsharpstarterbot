@@ -1,10 +1,11 @@
 ﻿#r "packages/Suave/lib/net40/Suave.dll"
-#r "packages/Microsoft.Bot.Connector/lib/net45/Microsoft.Bot.Connector.dll"
+#r "packages/Microsoft.Bot.Builder/lib/net46/Microsoft.Bot.Connector.dll"
 #r "packages/Microsoft.Bot.Builder/lib/net46/Microsoft.Bot.Builder.dll"
 #r "packages/Microsoft.Rest.ClientRuntime/lib/net45/Microsoft.Rest.ClientRuntime.dll"
 #r "packages/Microsoft.WindowsAzure.ConfigurationManager/lib/net40/Microsoft.WindowsAzure.Configuration.dll"
 #r "packages/Newtonsoft.Json/lib/net45/Newtonsoft.Json.dll"
 #r "packages/Autofac/lib/net40/Autofac.dll"
+#r "packages/System.Net.Http/lib/net46/System.Net.Http.dll"
 
 open Suave
 open Suave.Successful
@@ -17,13 +18,14 @@ open Microsoft.Bot.Connector
 open Microsoft.Bot.Builder.Dialogs
 open System
 open System.Threading.Tasks
+open System.Net.Http
 
 let envAsOption (envVarName : string) =
     let envVarValue = Environment.GetEnvironmentVariable(envVarName)
     if ((isNull envVarValue) || (envVarValue.Trim().Length = 0)) then None else Some envVarValue
 
-let appId = defaultArg (envAsOption "BOTAPPID") "John"
-let appSecret = defaultArg (envAsOption "BOTAPPSECRET") "Secret"
+let appId = defaultArg (envAsOption "MicrosoftAppId") "John"
+let appSecret = defaultArg (envAsOption "MicrosoftAppPassword") "Secret"
 
 [<AutoOpen>]
 module Helpers = 
@@ -62,15 +64,15 @@ type MyBot () =
         )
     
     // Handle received message 
-    member this.messageReceived (ctx : IDialogContext) (a : IAwaitable<Message>) = 
+    member this.messageReceived (ctx : IDialogContext) (a : IAwaitable<Activity>) = 
         Task.Factory.StartNew(fun () ->
             let message = a.GetAwaiter().GetResult()
 
             if (message.Text = "reset") then
-                    PromptDialog.Confirm(ctx, ResumeAfter(this.confirmReset), "Are you sure you want to reset the count?", "Didn't get that!", 2, PromptStyle.None)
+                PromptDialog.Confirm(ctx, ResumeAfter(this.confirmReset), "Are you sure you want to reset the count?", "Didn't get that!", 2, PromptStyle.None)
             else
                 count <- count + 1
-                let t = (sprintf "%d : You said: %s" count message.Text) |> ctx.PostAsync 
+                message.CreateReply(sprintf "%d : You said: %s" count message.Text) |> ctx.PostAsync |> Async.AwaitTask |> Async.RunSynchronously
                 ctx.Wait <| ResumeAfter(this.messageReceived)
         )
 
@@ -81,35 +83,22 @@ type MyBot () =
             )
 
 /// Handle messages
-let botHandler (message : Message) =
-    printfn "Received messsage of type %s: %s" message.Type message.Text
+let botHandler (activity : Activity) =
+    printfn "Received messsage of type %s: %s" activity.Type activity.Text
 
     async {
-        match message.Type with
-        | "Message" ->
+        match activity.Type with
+        | ActivityTypes.Message ->
             try
-                return! Conversation.SendAsync(message, (fun _ -> MyBot () :> IDialog<obj>), Threading.CancellationToken()) |> Async.AwaitTask
+                Conversation.SendAsync(activity, (fun _ -> MyBot () :> IDialog<obj>), Threading.CancellationToken()).RunSynchronously |> ignore
+                return ""
             with
-            | :? System.AggregateException as ae -> 
-                     let reply = message.CreateReplyMessage()
-                     reply.Type <- "Message"
-                     reply.Text <- sprintf "Sorry, I am having a hard time understanding you because of %s." (ae.InnerExceptions.Item(0).Message)
+            | exn -> let reply = (sprintf "Sorry, I am having a hard time understanding you because of %s." exn.Message)
                      return reply
-            | exn -> let reply = message.CreateReplyMessage()
-                     reply.Type <- "Message"
-                     reply.Text <- sprintf "Sorry, I am having a hard time understanding you because of %s." exn.Message
-                     return reply
-        | "Ping" ->
-            let reply = message.CreateReplyMessage()
-            reply.Type <- "Ping"
+        | ActivityTypes.Ping ->
+            let reply = "Ping"
             return reply
-        | "DeleteUserData"
-        | "BotAddedToConversation"
-        | "BotRemovedFromConversation"
-        | "UserAddedToConversation"
-        | "UserRemovedFromConversation"
-        | "EndOfConversation"
-        | _ -> return null
+        | _ -> return "Unhandled activity type."
     } |> Async.RunSynchronously 
 
 /// Suave application

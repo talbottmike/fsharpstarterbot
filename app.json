@@ -1,8 +1,8 @@
 {
-  "name": "Microsoft BotFramework starter using FSharp and Suave.io",
+  "name": "Microsoft BotFramework Demo",
   "description": "Cross-platform starter bot using FSharp and Suave.io with easy Heroku and Azure deployment",
   "website": "https://dev.botframework.com",
-  "repository": "https://github.com/jgoalby/fsharpstarterbot",
+  "repository": "https://github.com/talbottmike/fsharpstarterbot",
   "logo": "https://raw.githubusercontent.com/SuaveIO/suave/gh-pages/images/logo.gif",
   "keywords": [ "botframework", "bot", "suave", "fsharp" ],
   "env": {
